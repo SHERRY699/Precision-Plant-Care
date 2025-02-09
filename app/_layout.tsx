@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -10,11 +9,7 @@ export default function RootLayout() {
     robottobold: require("../assets/fonts/Roboto-Bold.ttf"),
   });
 
-  if (!fontsLoaded) return null; 
+  if (!fontsLoaded) return null;
 
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </SafeAreaView>
-  );
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

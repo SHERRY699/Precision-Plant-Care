@@ -10,14 +10,21 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useState } from "react";
 import { Colors } from "@/assets/Colors";
 import { ModalProps } from "@/utils/type";
+import { useRouter, useSegments } from "expo-router";
 
 export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
   const [showEye, setShowEye] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const router = useRouter();
 
   // Handle SignUp
   const handleSignUp = () => {
     onToggle(false);
+  };
+
+  //Handle Home
+  const handleHome = () => {
+    router.push("/(tabs)/home");
   };
 
   //Handle Eye
@@ -91,7 +98,7 @@ export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
         <Text style={{ color: Colors.text }}>Terms of Services</Text> and
         <Text style={{ color: Colors.text }}> Privacy Policy .</Text>
       </Text>
-      <TouchableOpacity style={styles.btn}>
+      <TouchableOpacity onPress={handleHome} style={styles.btn}>
         <Text style={{ color: "white", fontFamily: "robotto" }}>Login</Text>
       </TouchableOpacity>
       <View style={{ width: 300, height: 1, backgroundColor: "grey" }} />
