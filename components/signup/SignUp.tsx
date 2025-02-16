@@ -1,5 +1,4 @@
 import {
-  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -55,7 +54,7 @@ export const Signup = ({ onToggle }: ModalProps): JSX.Element | null => {
         />
         <TouchableOpacity
           onPress={handleEye}
-          style={{ position: "absolute", top: 10, right: 40 }}
+          style={{ position: "absolute", top: 10, right: 48 }}
         >
           {showEye ? (
             <FontAwesome5 name="eye-slash" size={20} color="black" />
@@ -78,7 +77,7 @@ export const Signup = ({ onToggle }: ModalProps): JSX.Element | null => {
         />
         <TouchableOpacity
           onPress={handleEye1}
-          style={{ position: "absolute", top: 10, right: 40 }}
+          style={{ position: "absolute", top: 10, right: 48 }}
         >
           {showEye1 ? (
             <FontAwesome5 name="eye-slash" size={20} color="black" />

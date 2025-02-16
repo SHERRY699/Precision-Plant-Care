@@ -10,7 +10,7 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useState } from "react";
 import { Colors } from "@/assets/Colors";
 import { ModalProps } from "@/utils/type";
-import { useRouter, useSegments } from "expo-router";
+import { useRouter } from "expo-router";
 
 export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
   const [showEye, setShowEye] = useState<boolean>(false);
@@ -53,7 +53,7 @@ export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
         />
         <TouchableOpacity
           onPress={handleEye}
-          style={{ position: "absolute", top: 10, right: 40 }}
+          style={{ position: "absolute", top: 10, right: 48 }}
         >
           {showEye ? (
             <FontAwesome5 name="eye-slash" size={20} color="black" />

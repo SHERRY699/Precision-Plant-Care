@@ -35,8 +35,8 @@ export default function Home(): JSX.Element | null {
       <StatusBar backgroundColor="#F1EDE2" style="dark" />
       {/* <Image
         source={require("../../assets/images/logo-image.png")}
-        width={10}
-        height={10}
+        width={5}
+        height={5}
         alt="Image.svg"
       /> */}
       <View style={styles.container}>
