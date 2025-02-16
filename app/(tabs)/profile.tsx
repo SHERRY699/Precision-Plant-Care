@@ -1,14 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Button,
-} from "react-native";
+import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/assets/Colors";
 import { useRouter } from "expo-router";
@@ -52,7 +43,7 @@ export default function Home(): JSX.Element | null {
           >
             <Text style={{ fontFamily: "robotto", fontSize: 18 }}>Sherry</Text>
             <TouchableOpacity
-            onPress={()=>handleNavigation('/')}
+              onPress={() => handleNavigation("/")}
               style={{
                 display: "flex",
                 alignItems: "center",

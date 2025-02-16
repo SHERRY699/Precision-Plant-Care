@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
-import { Colors } from "@/assets/Colors";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({

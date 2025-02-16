@@ -1,16 +1,7 @@
 import { Colors } from "@/assets/Colors";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Modal,
-  TouchableOpacity,
-  Switch,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Image } from "react-native";
 
 export default function Settings(): JSX.Element | null {

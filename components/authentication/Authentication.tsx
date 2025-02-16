@@ -2,7 +2,6 @@ import { Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { Colors } from "@/assets/Colors";
 import { Login } from "@/components/login/Login";
 import { Signup } from "../signup/SignUp";
 
