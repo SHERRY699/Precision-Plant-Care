@@ -31,6 +31,16 @@ export default function RootLayout() {
           headerTintColor: "#000",
         }}
       />
+      <Stack.Screen
+      name="cultivation-tips/index"
+      options={{
+        headerShown: true,
+        title: "Cultivation Tips",
+        headerStyle: { backgroundColor: "#F1EDE2" },
+        headerTintColor: "#000",
+      }}
+
+      />
     </Stack>
   );
 }

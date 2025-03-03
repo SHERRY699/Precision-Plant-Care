@@ -28,6 +28,7 @@ export default function Settings(): JSX.Element | null {
   //HnadleModal
   const handleModal = () => {
     setModal((prev) => !prev);
+    console.log('pressed')
   };
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -204,6 +205,8 @@ export default function Settings(): JSX.Element | null {
             >
               1.0.0 Beta Released
             </Text>
+            <Text>{modal ? "Modal is Open" : "Modal is Closed"}</Text>
+
           </View>
         </View>
       </View>
@@ -259,15 +262,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   modalview: {
-    position: "fixed",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
+    flex:1,
     backgroundColor: "#0000001A",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    
   },
   container: {
     width: "70%",
