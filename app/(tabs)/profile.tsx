@@ -72,8 +72,8 @@ export default function Home(): JSX.Element | null {
         >
           <Image
             source={require("../../assets/images/profile.png")}
-            width={107}
-            height={107}
+            width={100}
+            height={102}
             alt="Image.svg"
           />
           <View

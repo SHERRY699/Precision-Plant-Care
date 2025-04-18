@@ -93,7 +93,6 @@ export default function Home(): JSX.Element | null {
 
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
     });
 
@@ -114,7 +113,6 @@ export default function Home(): JSX.Element | null {
 
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
     });
 

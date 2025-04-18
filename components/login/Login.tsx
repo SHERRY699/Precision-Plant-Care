@@ -76,7 +76,7 @@ export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
             username: "",
             password: "",
           });
-          router.push("/(tabs)/home");
+          router.replace("/(tabs)/home");
         },
         onError: (error: ApiError) => {
           const errorMessage =
