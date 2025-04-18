@@ -65,7 +65,9 @@ export default function Settings(): JSX.Element | null {
           >
             Select your app language{" "}
           </Text>
-          <TouchableOpacity onPress={handleModal}>
+          <TouchableOpacity 
+  activeOpacity={0.7} 
+  pressRetentionOffset={{ bottom: 10, left: 10, right: 10, top: 10 }} onPress={handleModal}>
             <Text
               style={{
                 fontFamily: "robottomedium",

@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   TextInput,
@@ -8,12 +9,22 @@ import {
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useState } from "react";
 import { Colors } from "@/assets/Colors";
-import { ModalProps } from "@/utils/type";
+import { ApiError, ModalProps } from "@/utils/type";
+import Toast from "react-native-toast-message";
+import { useRegister } from "@/utils/api";
 
 export const Signup = ({ onToggle }: ModalProps): JSX.Element | null => {
   const [showEye, setShowEye] = useState<boolean>(false);
   const [showEye1, setShowEye1] = useState<boolean>(false);
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [items, setItems] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+  const { mutate: register } = useRegister("/auth/register", items);
+  const [loading, setLoading] = useState(false);
 
   //Handle Eye
   const handleEye = () => {
@@ -25,21 +36,79 @@ export const Signup = ({ onToggle }: ModalProps): JSX.Element | null => {
     setShowEye1(!showEye1);
   };
 
-  // Handle Remember Me
-  const handleRemember = () => {
-    setRememberMe(!rememberMe);
-  };
-
   // Handle SignUp
   const handleSignIn = () => {
     onToggle(true);
   };
 
+  const handleSignUp = () => {
+    setLoading(true);
+    if (!items?.username || !items?.password || !items?.email || !items?.name) {
+      Toast.show({
+        type: "info",
+        text1: "All Fields Required",
+      });
+      setLoading(false);
+    } else if (items?.password != confirmPassword) {
+      Toast.show({
+        type: "error",
+        text1: "Password Should Match",
+      });
+      setLoading(false);
+    } else {
+      register(undefined, {
+        onSuccess: (data) => {
+          Toast.show({
+            type: "success",
+            text1: `${data?.message}`,
+          });
+          setItems({
+            name: "",
+            username: "",
+            email: "",
+            password: "",
+          });
+          setConfirmPassword("");
+          onToggle(true);
+        },
+        onError: (error: ApiError) => {
+          const errorMessage =
+            error?.response?.data?.message || "Something went wrong";
+
+          Toast.show({
+            type: "error",
+            text1: errorMessage,
+          });
+        },
+        onSettled: () => {
+          setLoading(false);
+        },
+      });
+    }
+  };
+
   return (
     <View style={styles.signup}>
-      <TextInput style={styles.input} placeholder="Enter Your Name" />
-      <TextInput style={styles.input} placeholder="Enter Your Username" />
-      <TextInput style={styles.input} placeholder="Enter Your Email" />
+      <TextInput
+        style={styles.input}
+        value={items?.name}
+        onChangeText={(text) => setItems((prev) => ({ ...prev, name: text }))}
+        placeholder="Enter Your Name"
+      />
+      <TextInput
+        style={styles.input}
+        value={items?.username}
+        onChangeText={(text) =>
+          setItems((prev) => ({ ...prev, username: text }))
+        }
+        placeholder="Enter Your Username"
+      />
+      <TextInput
+        style={styles.input}
+        value={items?.email}
+        onChangeText={(text) => setItems((prev) => ({ ...prev, email: text }))}
+        placeholder="Enter Your Email"
+      />
       <View
         style={{
           width: "100%",
@@ -48,6 +117,10 @@ export const Signup = ({ onToggle }: ModalProps): JSX.Element | null => {
         }}
       >
         <TextInput
+          value={items?.password}
+          onChangeText={(text) =>
+            setItems((prev) => ({ ...prev, password: text }))
+          }
           style={[styles.input, styles.positions]}
           placeholder="Enter Your Password"
           secureTextEntry={showEye ? false : true}
@@ -71,6 +144,8 @@ export const Signup = ({ onToggle }: ModalProps): JSX.Element | null => {
         }}
       >
         <TextInput
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
           style={[styles.input, styles.positions]}
           placeholder="Confirm Your Password"
           secureTextEntry={showEye1 ? false : true}
@@ -96,8 +171,12 @@ export const Signup = ({ onToggle }: ModalProps): JSX.Element | null => {
         }}
       ></View>
 
-      <TouchableOpacity style={styles.btn}>
-        <Text style={{ color: "white", fontFamily: "robotto" }}>Sign Up</Text>
+      <TouchableOpacity onPress={handleSignUp} style={styles.btn}>
+        {loading ? (
+          <ActivityIndicator size="small" color={`${Colors.primary}`} />
+        ) : (
+          <Text style={{ color: "white", fontFamily: "robotto" }}>Sign Up</Text>
+        )}
       </TouchableOpacity>
       <View style={{ width: 300, height: 1, backgroundColor: "grey" }} />
       <View
@@ -152,6 +231,7 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 40,
     backgroundColor: Colors.primary,
+    paddingLeft: 10,
   },
   positions: {
     position: "relative",

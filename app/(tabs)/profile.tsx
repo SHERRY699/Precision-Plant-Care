@@ -3,12 +3,56 @@ import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/assets/Colors";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import { useLogout } from "@/utils/api";
+import { ApiError } from "@/utils/type";
+import Toast from "react-native-toast-message";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/features/authSlice";
 
 export default function Home(): JSX.Element | null {
   const router = useRouter();
+  const [userData, setUserData] = useState<any>(null); // Store user data
+
+  const { mutate: Logout } = useLogout(`/auth/logout`, userData?.token);
 
   const handleNavigation = (path: any) => {
     router.push(path);
+  };
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("user");
+      const parsed = jsonValue != null ? JSON.parse(jsonValue) : null;
+      setUserData(parsed);
+    } catch (e) {
+      console.log("Error reading user from storage", e);
+    }
+  };
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    getData(); // Fetch on mount
+  }, []);
+
+  const handleLogOut = () => {
+    Logout(undefined, {
+      onSuccess: (data) => {
+        dispatch(logout())
+        router.push("/");
+      },
+      onError: (error: ApiError) => {
+        const errorMessage =
+          error?.response?.data?.message || "Something went wrong";
+
+        Toast.show({
+          type: "error",
+          text1: errorMessage,
+        });
+      },
+    });
   };
 
   return (
@@ -41,9 +85,11 @@ export default function Home(): JSX.Element | null {
               gap: 10,
             }}
           >
-            <Text style={{ fontFamily: "robotto", fontSize: 18 }}>Sherry</Text>
+            <Text style={{ fontFamily: "robotto", fontSize: 18 }}>
+              {userData?.user?.name}
+            </Text>
             <TouchableOpacity
-              onPress={() => handleNavigation("/")}
+              onPress={handleLogOut}
               style={{
                 display: "flex",
                 alignItems: "center",

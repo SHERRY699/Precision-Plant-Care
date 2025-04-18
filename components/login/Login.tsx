@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   StyleSheet,
   Text,
@@ -9,22 +10,30 @@ import {
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useState } from "react";
 import { Colors } from "@/assets/Colors";
-import { ModalProps } from "@/utils/type";
+import { ApiError, ModalProps } from "@/utils/type";
 import { useRouter } from "expo-router";
+import { useLogin } from "@/utils/api";
+import Toast from "react-native-toast-message";
+import * as Linking from "expo-linking";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "@/redux/features/authSlice";
 
 export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
   const [showEye, setShowEye] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [items, setItems] = useState({
+    username: "",
+    password: "",
+  });
   const router = useRouter();
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const dispatch = useDispatch();
+  const { mutate: login } = useLogin("/auth/login", items);
+  const [loading, setLoading] = useState(false);
 
   // Handle SignUp
   const handleSignUp = () => {
     onToggle(false);
-  };
-
-  //Handle Home
-  const handleHome = () => {
-    router.push("/(tabs)/home");
   };
 
   //Handle Eye
@@ -36,9 +45,65 @@ export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
   const handleRemember = () => {
     setRememberMe(!rememberMe);
   };
+
+  const handleGoogleLogin = () => {
+    // Linking.openURL(`${API_URL}/auth/google/callback`);
+  };
+
+  const handleFacebookLogin = () => {
+    // Linking.openURL(`${API_URL}/auth/facebook/callback`);
+  };
+
+  const handleSignIn = () => {
+    setLoading(true);
+
+    if (!items?.username || !items?.password) {
+      Toast.show({
+        type: "info",
+        text1: "All Fields Required",
+      });
+      setLoading(false);
+
+    } else {
+      login(undefined, {
+        onSuccess: (data) => {
+          dispatch(loginSuccess(data));
+          Toast.show({
+            type: "success",
+            text1: `${data?.message}`,
+          });
+          setItems({
+            username: "",
+            password: "",
+          });
+          router.push("/(tabs)/home");
+        },
+        onError: (error: ApiError) => {
+          const errorMessage =
+            error?.response?.data?.message || "Something went wrong";
+
+          Toast.show({
+            type: "error",
+            text1: errorMessage,
+          });
+        },
+        onSettled: () => {
+          setLoading(false);
+        },
+      });
+    }
+  };
+
   return (
     <View style={styles.signindiv}>
-      <TextInput style={styles.input} placeholder="Enter Your Username" />
+      <TextInput
+        value={items?.username}
+        onChangeText={(text) =>
+          setItems((prev) => ({ ...prev, username: text }))
+        }
+        style={styles.input}
+        placeholder="Enter Your Username"
+      />
       <View
         style={{
           width: "100%",
@@ -48,6 +113,10 @@ export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
       >
         <TextInput
           style={[styles.input, styles.positions]}
+          value={items?.password}
+          onChangeText={(text) =>
+            setItems((prev) => ({ ...prev, password: text }))
+          }
           placeholder="Enter Your Password"
           secureTextEntry={showEye ? false : true}
         />
@@ -98,9 +167,15 @@ export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
         <Text style={{ color: Colors.text }}>Terms of Services</Text> and
         <Text style={{ color: Colors.text }}> Privacy Policy .</Text>
       </Text>
-      <TouchableOpacity onPress={handleHome} style={styles.btn}>
-        <Text style={{ color: "white", fontFamily: "robotto" }}>Login</Text>
+      <TouchableOpacity onPress={handleSignIn} 
+      style={styles.btn}>
+       {loading ?          <ActivityIndicator size="small" color={`${Colors.primary}`} />
+        :
+       
+       <Text style={{ color: "white", 
+        fontFamily: "robotto" }}>Login</Text>}
       </TouchableOpacity>
+      
       <View style={{ width: 300, height: 1, backgroundColor: "grey" }} />
       <View
         style={{
@@ -112,7 +187,7 @@ export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
           gap: 8,
         }}
       >
-        <TouchableOpacity style={styles.btn1}>
+        <TouchableOpacity onPress={handleGoogleLogin} style={styles.btn1}>
           <Image
             source={require("../../assets/images/google.png")}
             style={{ width: 21, height: 21 }}
@@ -121,7 +196,7 @@ export const Login = ({ onToggle }: ModalProps): JSX.Element | null => {
             Continue With Google
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn1}>
+        <TouchableOpacity onPress={handleFacebookLogin} style={styles.btn1}>
           <Image
             source={require("../../assets/images/facebook.png")}
             style={{ width: 21, height: 21 }}
@@ -174,6 +249,7 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 40,
     backgroundColor: Colors.primary,
+    paddingLeft:10
   },
   positions: {
     position: "relative",
